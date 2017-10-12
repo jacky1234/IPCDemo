@@ -8,6 +8,7 @@ import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
 public class BinderPool {
@@ -15,6 +16,8 @@ public class BinderPool {
     public static final int BINDER_NONE = -1;
     public static final int BINDER_COMPUTE = 0;
     public static final int BINDER_SECURITY_CENTER = 1;
+
+    private static final HashMap<Integer, IBinder> SERVICE_CACHE = new HashMap<>();
 
     private Context mContext;
     private IBinderPool mBinderPool;
@@ -78,6 +81,8 @@ public class BinderPool {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
+            SERVICE_CACHE.clear();
+
             mBinderPool = IBinderPool.Stub.asInterface(service);
             try {
                 mBinderPool.asBinder().linkToDeath(mBinderPoolDeathRecipient, 0);
@@ -94,6 +99,7 @@ public class BinderPool {
             Log.w(TAG, "binder died.");
             mBinderPool.asBinder().unlinkToDeath(mBinderPoolDeathRecipient, 0);
             mBinderPool = null;
+            SERVICE_CACHE.clear();
             connectBinderPoolService();
         }
     };
@@ -106,7 +112,9 @@ public class BinderPool {
 
         @Override
         public IBinder queryBinder(int binderCode) throws RemoteException {
-            IBinder binder = null;
+            IBinder binder = SERVICE_CACHE.get(binderCode);
+            if (binder != null) return binder;
+
             switch (binderCode) {
                 case BINDER_SECURITY_CENTER: {
                     binder = new SecurityCenterImpl();
@@ -120,6 +128,7 @@ public class BinderPool {
                     break;
             }
 
+            SERVICE_CACHE.put(binderCode, binder);
             return binder;
         }
     }
