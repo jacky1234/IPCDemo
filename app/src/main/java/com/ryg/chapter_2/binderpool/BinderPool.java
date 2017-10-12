@@ -11,6 +11,9 @@ import android.util.Log;
 import java.util.HashMap;
 import java.util.concurrent.CountDownLatch;
 
+/**
+ * usually init on Application#OnCreate
+ */
 public class BinderPool {
     private static final String TAG = "BinderPool";
     public static final int BINDER_NONE = -1;
@@ -22,7 +25,18 @@ public class BinderPool {
     private Context mContext;
     private IBinderPool mBinderPool;
     private static volatile BinderPool sInstance;
+    private BinderListener mBinderListener;
     private CountDownLatch mConnectBinderPoolCountDownLatch;
+
+    public interface BinderListener {
+        void bindSuccess();
+
+        void bindInterrupt();
+    }
+
+    public void registerBinderListener(BinderListener binderListener) {
+        mBinderListener = binderListener;
+    }
 
     private BinderPool(Context context) {
         mContext = context.getApplicationContext();
@@ -47,7 +61,6 @@ public class BinderPool {
                 Context.BIND_AUTO_CREATE);
         try {
             mConnectBinderPoolCountDownLatch.await();
-            //todo something when onServiceConnected
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -82,8 +95,11 @@ public class BinderPool {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             SERVICE_CACHE.clear();
-
             mBinderPool = IBinderPool.Stub.asInterface(service);
+            if (mBinderListener != null) {
+                mBinderListener.bindSuccess();
+            }
+
             try {
                 mBinderPool.asBinder().linkToDeath(mBinderPoolDeathRecipient, 0);
             } catch (RemoteException e) {
@@ -100,6 +116,7 @@ public class BinderPool {
             mBinderPool.asBinder().unlinkToDeath(mBinderPoolDeathRecipient, 0);
             mBinderPool = null;
             SERVICE_CACHE.clear();
+            if (mBinderListener != null) mBinderListener.bindInterrupt();
             connectBinderPoolService();
         }
     };

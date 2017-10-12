@@ -20,5 +20,7 @@ sourceSets {
 }
 ```
 
-
-### Binder线程池的实现
+### Binder
+日常开发中,Binder主要用在Service包括AIDL和Messenger. 而普通的Service中的Binder不涉及进程间的通信,无法触及Binder的核心. 而Messenger底层其实就是AIDL.所以我们利用AIDL来分析Binder的工作机制。
+Binder的工作机制大体如下：
+![](https://github.com/jacky1234/IPCDemo/img/Binder_work.png)
