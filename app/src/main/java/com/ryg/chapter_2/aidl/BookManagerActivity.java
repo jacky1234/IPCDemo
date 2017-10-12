@@ -1,9 +1,5 @@
 package com.ryg.chapter_2.aidl;
 
-import java.util.List;
-import com.ryg.chapter_2.R;
-import com.ryg.chapter_2.aidl.IBookManager;
-import com.ryg.chapter_2.utils.MyConstants;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ComponentName;
@@ -19,6 +15,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.ryg.chapter_2.R;
+
+import java.util.List;
+
 public class BookManagerActivity extends Activity {
 
     private static final String TAG = "BookManagerActivity";
@@ -31,11 +31,11 @@ public class BookManagerActivity extends Activity {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-            case MESSAGE_NEW_BOOK_ARRIVED:
-                Log.d(TAG, "receive new book :" + msg.obj);
-                break;
-            default:
-                super.handleMessage(msg);
+                case MESSAGE_NEW_BOOK_ARRIVED:
+                    Log.d(TAG, "receive new book :" + msg.obj);
+                    break;
+                default:
+                    super.handleMessage(msg);
             }
         }
     };
@@ -58,7 +58,7 @@ public class BookManagerActivity extends Activity {
             mRemoteBookManager = bookManager;
             try {
                 mRemoteBookManager.asBinder().linkToDeath(mDeathRecipient, 0);
-                List<Book> list = bookManager.getBookList();
+                List<Book> list = bookManager.getBookList();    //运行在UI线程中，如果进行进程间通信不应该在UI线程中
                 Log.i(TAG, "query book list, list type:"
                         + list.getClass().getCanonicalName());
                 Log.i(TAG, "query book list:" + list.toString());
@@ -105,6 +105,7 @@ public class BookManagerActivity extends Activity {
                 if (mRemoteBookManager != null) {
                     try {
                         List<Book> newList = mRemoteBookManager.getBookList();
+                        Log.d(TAG, "receiver books:" + newList.toString());
                     } catch (RemoteException e) {
                         e.printStackTrace();
                     }

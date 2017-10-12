@@ -28,6 +28,6 @@ public class MyApplication extends Application {
 
     private void doWorkInBackground() {
         // init binder pool
-        BinderPool.getInsance(getApplicationContext());
+        BinderPool.getInstance(getApplicationContext());
     }
 }

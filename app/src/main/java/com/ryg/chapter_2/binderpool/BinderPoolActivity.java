@@ -1,11 +1,12 @@
 package com.ryg.chapter_2.binderpool;
 
-import com.ryg.chapter_2.R;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+
+import com.ryg.chapter_2.R;
 
 public class BinderPoolActivity extends Activity {
     private static final String TAG = "BinderPoolActivity";
@@ -27,7 +28,7 @@ public class BinderPoolActivity extends Activity {
     }
 
     private void doWork() {
-        BinderPool binderPool = BinderPool.getInsance(BinderPoolActivity.this);
+        BinderPool binderPool = BinderPool.getInstance(BinderPoolActivity.this);
         IBinder securityBinder = binderPool
                 .queryBinder(BinderPool.BINDER_SECURITY_CENTER);
         

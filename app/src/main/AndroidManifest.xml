@@ -67,7 +67,6 @@
             android:label="@string/title_activity_book_manager">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
@@ -125,7 +124,7 @@
             android:label="@string/title_activity_binder_pool">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>

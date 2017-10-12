@@ -1,7 +1,5 @@
 package com.ryg.chapter_2.binderpool;
 
-import java.util.concurrent.CountDownLatch;
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +7,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.util.Log;
+
+import java.util.concurrent.CountDownLatch;
 
 public class BinderPool {
     private static final String TAG = "BinderPool";
@@ -26,7 +26,7 @@ public class BinderPool {
         connectBinderPoolService();
     }
 
-    public static BinderPool getInsance(Context context) {
+    public static BinderPool getInstance(Context context) {
         if (sInstance == null) {
             synchronized (BinderPool.class) {
                 if (sInstance == null) {
@@ -44,6 +44,7 @@ public class BinderPool {
                 Context.BIND_AUTO_CREATE);
         try {
             mConnectBinderPoolCountDownLatch.await();
+            //todo something when onServiceConnected
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -51,11 +52,10 @@ public class BinderPool {
 
     /**
      * query binder by binderCode from binder pool
-     * 
-     * @param binderCode
-     *            the unique token of binder
+     *
+     * @param binderCode the unique token of binder
      * @return binder who's token is binderCode<br>
-     *         return null when not found or BinderPoolService died.
+     * return null when not found or BinderPoolService died.
      */
     public IBinder queryBinder(int binderCode) {
         IBinder binder = null;
@@ -78,7 +78,7 @@ public class BinderPool {
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-        	mBinderPool = IBinderPool.Stub.asInterface(service);
+            mBinderPool = IBinderPool.Stub.asInterface(service);
             try {
                 mBinderPool.asBinder().linkToDeath(mBinderPoolDeathRecipient, 0);
             } catch (RemoteException e) {
@@ -108,16 +108,16 @@ public class BinderPool {
         public IBinder queryBinder(int binderCode) throws RemoteException {
             IBinder binder = null;
             switch (binderCode) {
-            case BINDER_SECURITY_CENTER: {
-                binder = new SecurityCenterImpl();
-                break;
-            }
-            case BINDER_COMPUTE: {
-                binder = new ComputeImpl();
-                break;
-            }
-            default:
-                break;
+                case BINDER_SECURITY_CENTER: {
+                    binder = new SecurityCenterImpl();
+                    break;
+                }
+                case BINDER_COMPUTE: {
+                    binder = new ComputeImpl();
+                    break;
+                }
+                default:
+                    break;
             }
 
             return binder;
