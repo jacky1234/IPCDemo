@@ -40,12 +40,13 @@ Messenger包含了一个有用的api-getBinder#==Retrieve the IBinder that this 
 **4. 使用AIDL**
 
 **5. 使用ContentProvider**
-ContentProvider是Android提供专门用于不用应用进行数据共享的方式. 它的底层同样也是Binder. 因为系统封装, 所以它的使用比起AIDL要简单很多.
 
+ContentProvider是Android提供专门用于不用应用进行数据共享的方式. 它的底层同样也是Binder. 因为系统封装, 所以它的使用比起AIDL要简单很多.
 要实现一个内容提供者, 只需要写一个类继承ContentProvider,并复写六个抽象方法. 其中有四个是CURD操作方法. 一个onCreate()用来做初始化. 一个getType()用来返回一个Uri请求所对应的MIME类型,比如图片还是视频等. 如果我们不关心那么可是直接返回NULL或者*/*.
 这六个方法根据Binder工作原理,都是运行在ContentProvider的进程中. 除了onCreate()是被系统回调运行在主线程, 其余的都在Binder的线程池中.
 
 **6. 使用Socket**
+
 Server:ServerSocket
 
 **7. 各种IPC差异**

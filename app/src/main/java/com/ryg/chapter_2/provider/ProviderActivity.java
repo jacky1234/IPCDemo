@@ -1,15 +1,15 @@
 package com.ryg.chapter_2.provider;
 
-import com.ryg.chapter_2.R;
-import com.ryg.chapter_2.aidl.Book;
-import com.ryg.chapter_2.model.User;
-
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+
+import com.ryg.chapter_2.R;
+import com.ryg.chapter_2.aidl.Book;
+import com.ryg.chapter_2.model.User;
 
 public class ProviderActivity extends Activity {
     private static final String TAG = "ProviderActivity";
