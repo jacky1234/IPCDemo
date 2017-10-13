@@ -20,8 +20,24 @@ sourceSets {
 }
 ```
 
+### 跨进程的几种方式
+**1. 使用Bundle**
+由于Bundle实现了Parcelable接口,所以在四大组件中的三大组件(Activity, Service, Receiver)都支持在Intent中传递Bundle.
+
+**2. 使用文件共享**
+文件共享适合在对数据同步要求不高的进程之间进行通信,并且要妥善的处理并发读写的问题.
+场景：两个进程通过读/写同一个文件来交换数据. 例如进程A把数据写入文件中,而进程B从文件中读取出来数据.
+
+**3. 使用Messenger**
+Messenger(信使). 不同的进程中可以传递Message对象, 在Message中放入我们需要传递的数据,就可实现进程间传递. Messenger是一种轻量级的IPC方案,它的底层实现AIDL.
+
+
 ### Binder
 日常开发中,Binder主要用在Service包括AIDL和Messenger. 而普通的Service中的Binder不涉及进程间的通信,无法触及Binder的核心. 而Messenger底层其实就是AIDL.所以我们利用AIDL来分析Binder的工作机制。
 Binder的工作机制大体如下：
 
 ![](https://github.com/jacky1234/IPCDemo/blob/master/img/Binder_work.png?raw=true)
+
+有两点需要注意:
+- 客户端发起远程请求时,当前线程会被挂起直到服务器进程返回数据,所以注意线程是否在意耗时。
+- 由于服务端Binder方法运行在Binder线程池中,所以不管Binder方法是否耗时都应该采用同步方式,因为已经在一个线程中了。
