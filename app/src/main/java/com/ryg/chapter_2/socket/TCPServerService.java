@@ -1,5 +1,11 @@
 package com.ryg.chapter_2.socket;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+
+import com.ryg.chapter_2.utils.MyUtils;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -10,16 +16,10 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Random;
 
-import com.ryg.chapter_2.utils.MyUtils;
-
-import android.app.Service;
-import android.content.Intent;
-import android.os.IBinder;
-
 public class TCPServerService extends Service {
 
     private boolean mIsServiceDestoryed = false;
-    private String[] mDefinedMessages = new String[] {
+    private String[] mDefinedMessages = new String[]{
             "你好啊，哈哈",
             "请问你叫什么名字呀？",
             "今天北京天气不错啊，shy",
@@ -71,7 +71,7 @@ public class TCPServerService extends Service {
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-                        };
+                        }
                     }.start();
 
                 } catch (IOException e) {

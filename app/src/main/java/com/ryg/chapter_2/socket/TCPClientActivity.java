@@ -1,13 +1,5 @@
 package com.ryg.chapter_2.socket;
 
-import java.io.*;
-import java.net.Socket;
-import java.sql.Date;
-import java.text.SimpleDateFormat;
-
-import com.ryg.chapter_2.R;
-import com.ryg.chapter_2.utils.MyUtils;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -22,6 +14,19 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.ryg.chapter_2.R;
+import com.ryg.chapter_2.utils.MyUtils;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.sql.Date;
+import java.text.SimpleDateFormat;
+
 public class TCPClientActivity extends Activity implements OnClickListener {
 
     private static final int MESSAGE_RECEIVE_NEW_MSG = 1;
@@ -35,7 +40,7 @@ public class TCPClientActivity extends Activity implements OnClickListener {
     private Socket mClientSocket;
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    private Handler mHandler =  new Handler() {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {

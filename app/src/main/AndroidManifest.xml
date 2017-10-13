@@ -82,6 +82,7 @@
             android:process=":remote">
             <intent-filter>
                 <action android:name="com.ryg.MessengerService.launch"/>
+
             </intent-filter>
         </service>
         <service
@@ -92,6 +93,10 @@
         <activity
             android:name=".provider.ProviderActivity"
             android:label="@string/title_activity_provider">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
 
         </activity>
 
@@ -110,9 +115,7 @@
             android:name=".socket.TCPClientActivity"
             android:label="@string/title_activity_tcpclient"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-            </intent-filter>
+
         </activity>
 
         <service
@@ -124,7 +127,6 @@
             android:label="@string/title_activity_binder_pool">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
     </application>
